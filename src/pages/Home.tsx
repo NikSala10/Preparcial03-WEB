@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { RootState } from "../redux/store";
 import useCharacter from "../hook/useCharactersFetch";
 import { addFavorites, deleteCharacter, setCharacter, type Character } from "../redux/slices/characterSlice";
-import { setUserType } from "../redux/slices/userSlice";
+import { setUserRole } from "../redux/slices/userSlice";
 import { useEffect, useState } from "react";
 
 const Home = () => {
@@ -14,7 +14,7 @@ const Home = () => {
 
   const {loading, characters, error} = useCharacter()
   const allCharacters = useSelector((state: RootState) => state.character.characters)
-  const userType = useSelector((state: RootState) => state.user.userType);
+  const userType = useSelector((state: RootState) => state.user.user);
   const favorites = useSelector((state: RootState) => state.character.favorites);
 
   const isFavorite = (id: string | number) => 
@@ -27,8 +27,10 @@ const Home = () => {
   }, [characters,allCharacters, dispatch]);
 
   const toggleRole = () => {
-    const newRole = userType === "admin" ? "user" : "admin";
-    dispatch(setUserType(newRole));
+    if (!userType) return
+
+    const newRole = userType.role === "admin" ? "user" : "admin";
+    dispatch(setUserRole(newRole));
   };
 
   const filteredCharacters = allCharacters.filter((character: Character) =>
@@ -43,11 +45,11 @@ const Home = () => {
     <>
       <h1>Character List </h1>
 
-      {userType === "admin" && (
+      {userType?.role === "admin" && (
         <button type="button" onClick={() => navigate("/create")}>Ir a Crear</button>
       )}
 
-      <h3>Rol actual: {userType}</h3>
+      <h3>Rol actual: {userType?.role}</h3>
       <button onClick={toggleRole}>Cambiar Rol</button>
       <button onClick={() => navigate("/fav")}>Ir a Favoritos</button>
 
@@ -81,7 +83,7 @@ const Home = () => {
           >
             {isFavorite(character.id) ? "❤️ Favorito" : "🤍 Favorito"}</button>
           
-            {userType === "admin" && (
+            {userType?.role === "admin" && (
             <>
               <button onClick={() => dispatch(deleteCharacter(character.id))}>Eliminar</button>
               <button onClick={() => navigate(`/edit/${character.id}`)}>Editar</button>

@@ -1,24 +1,33 @@
+// redux/slices/userSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-type UserType = "admin" | "user";
+export type User = {
+  name: string;
+  role: "admin" | "user";
+};
 
 type InitialState = {
-    userType: UserType;
+  user: User | null;
 };
 
 const initialState: InitialState = {
-   userType: "user", 
+  user: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserType: (state, action: PayloadAction<UserType>) => {
-      state.userType = action.payload;
+    setUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
     },
+   setUserRole: (state, action: PayloadAction<"admin" | "user">) => {
+    if (state.user) {
+        state.user.role = action.payload;
+    }
+},
   },
 });
 
-export const { setUserType } = userSlice.actions;
+export const { setUser, setUserRole } = userSlice.actions;
 export default userSlice.reducer;

@@ -35,7 +35,7 @@ const Edit = () => {
 
     dispatch(editCharacter(updatedCharacter));
     alert("Personaje editado con éxito");
-    navigate("/"); 
+    navigate("/home"); 
   };
 
   if (!characterToEdit) {

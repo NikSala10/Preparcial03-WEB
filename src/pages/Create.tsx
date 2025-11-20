@@ -25,7 +25,7 @@ const Create = () => {
 
     dispatch(addCharacter(newCharacter));
     alert("Personaje creado con éxito");
-    navigate("/");
+    navigate("/home");
   };
 
 
